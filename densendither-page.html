@@ -1,0 +1,187 @@
+<!doctype html>
+<!--
+    Hyperspace by HTML5 UP
+    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+  <head>
+    <title>Project Writeup - Template</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript
+      ><link rel="stylesheet" href="assets/css/noscript.css"
+    /></noscript>
+  </head>
+  <body class="is-preload">
+    <!-- Header -->
+    <header id="header">
+      <a href="index.html" class="title">echan-108</a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li>
+            <a href="template-page.html" class="active">Project Writeup</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+      <!-- Main -->
+      <section id="main" class="wrapper">
+        <div class="inner">
+          <h1 class="major">Dither</h1>
+          <span class="image fit">
+            <img
+              src="images/dither/ditherhomepage.png"
+              alt="Dither Tool Screenshot"
+            />
+          </span>
+          <hr />
+          <h2>Problem</h2>
+          <p>
+            Lots of wallpapers exist, but there are two key issues. Most won't
+            match your screen resolution, and most won't match your color
+            scheme.
+          </p>
+          <h2>Solution</h2>
+          <p>
+            The fix was to lean on an old technique for reducing an image's
+            color palette called dithering. Formally, dithering is the
+            intentional application of noise to data before quantization in
+            order to spread out quantization error — but it's easier to just see
+            it in action. Take an image converted to black and white with a
+            single threshold versus one converted using ordered dithering: the
+            dithered version preserves far more perceived detail using the same
+            two colors.
+          </p>
+          <div
+            style="
+              display: flex;
+              gap: 20px;
+              justify-content: center;
+              margin: 20px 0;
+            "
+          >
+            <div style="flex: 1; text-align: center">
+              <img
+                src="images/dither/threshold.png"
+                alt="Threshold Conversion"
+                style="width: 100%; max-width: 300px"
+              />
+              <p style="font-size: 0.9em; margin-top: 10px">Threshold</p>
+            </div>
+            <div style="flex: 1; text-align: center">
+              <img
+                src="images/dither/ordered-dither.png"
+                alt="Ordered Dithering"
+                style="width: 100%; max-width: 300px"
+              />
+              <p style="font-size: 0.9em; margin-top: 10px">
+                Ordered Dithering
+              </p>
+            </div>
+            <div style="flex: 1; text-align: center">
+              <img
+                src="images/dither/comparison.png"
+                alt="Comparison"
+                style="width: 100%; max-width: 300px"
+              />
+              <p style="font-size: 0.9em; margin-top: 10px">Comparison</p>
+            </div>
+          </div>
+          <p>
+            The same principle extends beyond black and white. By swapping in
+            any target color palette, you can dither an image to match an
+            arbitrary set of colors while keeping the image looking cohesive.
+            Back in the early 2000s, dithering was a common trick for shrinking
+            file sizes. Today, storage isn't the concern — which means you can
+            dither an image and still keep its full resolution, making it a
+            practical tool for wallpaper theming.
+          </p>
+          <p>
+            I built a CLI tool in Go using its native image library along with a
+            CLI framework to tie everything together. The tool supports creating
+            and saving custom color palettes for reuse. For dithering
+            algorithms, I started with ordered dithering since it was the most
+            straightforward to implement, then added Floyd-Steinberg and Stucki
+            afterward to produce smoother, more natural-looking results.
+          </p>
+          <div
+            style="
+              display: flex;
+              gap: 20px;
+              justify-content: center;
+              margin: 20px 0;
+            "
+          >
+            <div style="flex: 1; text-align: center">
+              <img
+                src="images/dither/threshold.png"
+                alt="Threshold Conversion"
+                style="width: 100%; max-width: 300px"
+              />
+              <p style="font-size: 0.9em; margin-top: 10px">Threshold</p>
+            </div>
+            <div style="flex: 1; text-align: center">
+              <img
+                src="images/dither/ordered-dither.png"
+                alt="Ordered Dithering"
+                style="width: 100%; max-width: 300px"
+              />
+              <p style="font-size: 0.9em; margin-top: 10px">
+                Ordered Dithering
+              </p>
+            </div>
+            <div style="flex: 1; text-align: center">
+              <img
+                src="images/dither/comparison.png"
+                alt="Comparison"
+                style="width: 100%; max-width: 300px"
+              />
+              <p style="font-size: 0.9em; margin-top: 10px">Comparison</p>
+            </div>
+          </div>
+          <h2>Results</h2>
+          <p>
+            A working CLI tool that can resize images and dither them to any
+            custom color palette. You can check the GitHub page for the project
+            here:
+            <a
+              href="https://github.com/Densentrated/densendither"
+              style="text-decoration: underline; color: #3273dc"
+              >GitHub</a
+            >
+          </p>
+          <h2>Credits</h2>
+          <p>Built independently.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer" class="wrapper alt">
+      <div class="inner">
+        <ul class="menu">
+          <li>&copy; echan-108. All rights reserved.</li>
+          <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+        </ul>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
