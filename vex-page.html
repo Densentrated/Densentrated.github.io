@@ -1,0 +1,103 @@
+<!doctype html>
+<!--
+    Hyperspace by HTML5 UP
+    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+  <head>
+    <title>Project Writeup - VEX</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript
+      ><link rel="stylesheet" href="assets/css/noscript.css"
+    /></noscript>
+  </head>
+  <body class="is-preload">
+    <!-- Header -->
+    <header id="header">
+      <a href="index.html" class="title">echan-108</a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="generic.html" class="active">Project Writeup</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+      <!-- Main -->
+      <section id="main" class="wrapper">
+        <div class="inner">
+          <h1 class="major">VEX</h1>
+          <span class="image fit">
+            <img src="images/vex/vexhomepage.png" alt="VEX Homepage Screenshot" />
+          </span>
+          <hr />
+          <h2>Problem</h2>
+          <p>
+            Reviewing notes takes a lot of time, especially when they aren't
+            perfectly organized. Tracking down a specific formula or the right
+            code pattern means digging through pages of content manually — a
+            slow, frustrating process.
+          </p>
+          <h2>Solution</h2>
+          <p>
+            LLMs make for a great natural language interface for information© Untitled.
+            retrieval, so the goal was simple: narrow one down to just my notes.
+            Since my notes are already synced to the cloud via Obsidian Git,
+            pulling the latest version was straightforward. The harder problem
+            was figuring out which notes to actually send to the model — sending
+            everything wasn't an option.
+          </p>
+          <p>
+            A vector database turned out to be the right tool for the job. The
+            pipeline works like this: a query goes into the vector database, the
+            top n most relevant chunks are retrieved, and those chunks along
+            with the original query are passed to the LLM with a system prompt
+            tuned for knowledge retrieval. The result is fast, context-aware
+            answers pulled directly from my own notes.
+          </p>
+          <p>
+            On the infrastructure side, I built a lightweight web server using
+            Gin Gonic to automatically pull the latest notes whenever I push to
+            the repo. The vector database and its interface live inside the
+            notes repo itself, keeping everything self-contained. A simple
+            frontend rendered at the /portal endpoint ties it all together into
+            a usable web portal.
+          </p>
+          <h2>Results</h2>
+          <p>
+            I now had a web portal I could use to query my notes. You can check the GitHub page for the project here: <a href="https://github.com/Densentrated/v_e_x_" style="text-decoration: underline; color: #3273dc;">https://github.com/Densentrated/v_e_x_</a>
+          </p>
+          <h2>Credits</h2>
+          <p>Built independently. The chromemgo package was especially useful — it runs the vector database in-process, eliminating the need to manage it as a separate service.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer" class="wrapper alt">
+      <div class="inner">
+        <ul class="menu">
+          <li>&copy; echan-108. All rights reserved.</li>
+          <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+        </ul>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

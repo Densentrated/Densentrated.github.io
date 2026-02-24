@@ -1,0 +1,107 @@
+<!doctype html>
+<!--
+    Hyperspace by HTML5 UP
+    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+  <head>
+    <title>Project Writeup - Template</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript
+      ><link rel="stylesheet" href="assets/css/noscript.css"
+    /></noscript>
+  </head>
+  <body class="is-preload">
+    <!-- Header -->
+    <header id="header">
+      <a href="index.html" class="title">echan-108</a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li>
+            <a href="template-page.html" class="active">Project Writeup</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+      <!-- Main -->
+      <section id="main" class="wrapper">
+        <div class="inner">
+          <h1 class="major">ECG Amplifier</h1>
+          <span class="image fit">
+            <img
+              src="images/ecg/ecghomepage.png"
+              alt="ECG Circuit Screenshot"
+            />
+          </span>
+          <hr />
+          <h2>Problem</h2>
+          <p>
+            The class assignment was to amplify the electrical signal from the
+            heart in order to observe its rhythm, while minimizing noise. The
+            processed analog signal would then be read by an ADC and passed into
+            MATLAB for additional digital filtering.
+          </p>
+          <h2>Solution</h2>
+          <p>
+            The core challenge was boosting the heart's signal while rejecting
+            common-mode noise — the kind of interference that appears equally on
+            both measurement leads. An instrumentation amplifier was the right
+            tool for this: it provides high differential gain while effectively
+            eliminating common-mode gain. From there, the signal passed through
+            a high-pass filter to strip out the DC component, and then a
+            low-pass filter to cut high-frequency noise. Together, these three
+            stages formed the complete analog signal chain.
+          </p>
+          <p>
+            After designing the circuit, we built it on a breadboard and tested
+            the output at each stage — raw signal, post-instrumentation
+            amplifier, post-high-pass, and post-low-pass — to verify each stage
+            was performing correctly before moving on. The conditioned signal
+            was then read into MATLAB via an ADC, where we applied additional
+            digital filters to further clean up the waveform and make the
+            heart's rhythm clearly visible.
+          </p>
+          <h2>Results</h2>
+          <p>
+            Using the processed signal, we were able to calculate the user's BPM
+            from the waveform. The project was also a solid hands-on
+            introduction to both analog and digital filter design and how the
+            two approaches complement each other in a real signal processing
+            pipeline.
+          </p>
+          <h2>Credits</h2>
+          <p>Built in collaboration with Sam Elkerton.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer" class="wrapper alt">
+      <div class="inner">
+        <ul class="menu">
+          <li>&copy; echan-108. All rights reserved.</li>
+          <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+        </ul>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
