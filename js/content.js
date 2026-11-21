@@ -30,9 +30,8 @@ window.PORTFOLIO = (function () {
     handle: "@densentrated",
     role: "Hardware Engineer / Software Developer",
     location: "Boston, MA",
-    status: "Open to work",
-    email: "earl@example.com", // TODO: your real address
-    since: "2019", // TODO: the year you want to count from
+    status: "Available Q3 2027",
+    email: "chan.earl@pm.me",
     tagline:
       "I'm a hardware engineer and software developer in Boston. I spend most " +
       "of my time near the bottom of the stack — <b>firmware, CLI tools and " +
@@ -41,28 +40,21 @@ window.PORTFOLIO = (function () {
     meta: [
       ["Does", "Hardware and software"],
       ["Lives in", "Boston, MA"],
-      ["Free from", "Q1 2027"], // TODO: real availability
+      ["Available", "Q3 2027"],
       ["Below", ""] // filled in from PROJECTS.length below
     ],
     links: [
       { label: "GitHub", href: "https://github.com/Densentrated" },
-      { label: "Email", href: "mailto:earl@example.com" },
-      { label: "Résumé", href: "#" }, // TODO
-      { label: "RSS", href: "#" } // TODO, or delete
+      { label: "Email", href: "mailto:chan.earl@pm.me" }
     ],
-    elsewhere: [
-      { label: "Writing", href: "#" }, // TODO, or delete
-      { label: "Photos", href: "#" },
-      { label: "Now", href: "#" },
-      { label: "Colophon", href: "#" }
-    ],
+    elsewhere: [],
     ticker: [
       "selected work, 2025 onward",
       "plain html and css, plus a few hundred lines of javascript",
       "no trackers, no cookies, nothing to install",
       "press T to change the colour",
       "press a number to jump between projects",
-      "say hi: earl@example.com"
+      "say hi: chan.earl@pm.me"
     ],
     colophon:
       "Set in whatever monospace font you already have. The pictures are " +

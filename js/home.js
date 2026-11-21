@@ -138,21 +138,21 @@
       return el("div", {}, [el("h3", { text: title }), ul]);
     }
 
+    var grids = [list("Links", SITE.links)];
+    if (SITE.elsewhere.length) grids.push(list("Elsewhere", SITE.elsewhere));
+    grids.push(el("div", {}, [
+      el("h3", { text: "Colophon" }),
+      el("p", { class: "colophon", text: SITE.colophon })
+    ]));
+
     return el("section", { class: "panel outro", id: "contact" }, [
       el("p", { class: "label", text: "Contact" }),
       el("p", { class: "outro__big" }, [
         el("a", { href: "mailto:" + SITE.email, class: "glitch", "data-text": SITE.email, text: SITE.email })
       ]),
-      el("div", { class: "outro__grid" }, [
-        list("Links", SITE.links),
-        list("Elsewhere", SITE.elsewhere),
-        el("div", {}, [
-          el("h3", { text: "Colophon" }),
-          el("p", { class: "colophon", text: SITE.colophon })
-        ])
-      ]),
+      el("div", { class: "outro__grid" }, grids),
       el("p", { class: "colophon" }, [
-        "© " + new Date().getFullYear() + " " + SITE.name + ". Working since " + SITE.since + "."
+        "© " + new Date().getFullYear() + " " + SITE.name + "."
       ])
     ]);
   }
