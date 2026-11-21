@@ -1,0 +1,460 @@
+/* ==========================================================================
+   chan-updated-portfolio — home
+   full-viewport, snap-scrolled showcase: one panel per project
+   ========================================================================== */
+
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+/* Snapping gets in the way when a panel is taller than the viewport. */
+@media (max-height: 620px), (max-width: 760px) {
+  html { scroll-snap-type: y proximity; }
+}
+
+.panel {
+  position: relative;
+  min-height: 100svh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: grid;
+  align-content: center;
+  padding: calc(var(--bar) + var(--pad)) var(--pad);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Keep panel content clear of the fixed index rail. */
+@media (min-width: 761px) {
+  .panel { padding-right: calc(var(--pad) + 3.5rem); }
+}
+
+/* --- hero ----------------------------------------------------------------- */
+
+.hero {
+  gap: clamp(1.2rem, 3vh, 2.4rem);
+}
+
+.hero__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hero__kicker .tag {
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--line);
+  color: var(--accent);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.hero__name {
+  font-size: clamp(2.6rem, 11.5vw, 10rem);
+  font-weight: 400;
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.hero__name .glitch { display: block; }
+
+/* Second line sits in outline so the name reads as two weights of the
+   same stroke rather than two sizes. */
+.hero__name em {
+  display: block;
+  font-style: normal;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--ink-dim);
+}
+
+.hero__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 1.1rem 2rem;
+  max-width: 62rem;
+  padding-top: clamp(1rem, 3vh, 2rem);
+  border-top: 1px solid var(--line);
+}
+
+.hero__meta dt {
+  margin-bottom: 0.3rem;
+  font-size: 0.64rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.hero__meta dd { color: var(--ink); }
+
+.hero__intro {
+  max-width: var(--measure);
+  color: var(--ink-dim);
+}
+
+.hero__intro b {
+  color: var(--ink);
+  font-weight: inherit;
+}
+
+.scrollcue {
+  position: absolute;
+  left: var(--pad);
+  bottom: calc(var(--bar) + 1.2rem);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.scrollcue::after {
+  content: "";
+  width: 3.5rem;
+  height: 1px;
+  background: linear-gradient(to right, var(--accent), transparent);
+  animation: cue 2.4s var(--ease) infinite;
+  transform-origin: left;
+}
+
+@keyframes cue {
+  0%, 100% { transform: scaleX(0.3); opacity: 0.4; }
+  50% { transform: scaleX(1); opacity: 1; }
+}
+
+/* --- the deck -------------------------------------------------------------
+   One pinned window that every project passes through. The deck is N
+   viewports tall: the sticky pane holds the first viewport of scroll and each
+   .deck__step adds one more. js/home.js turns scroll position within the deck
+   into a fractional slide index and drives the transforms from there.
+   -------------------------------------------------------------------------- */
+
+.deck { position: relative; }
+
+.deck__sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* Invisible spacers; they exist only to give the deck its scroll length and
+   to provide a snap point per project. */
+.deck__step {
+  height: 100svh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 5rem);
+  padding: calc(var(--bar) + var(--pad)) var(--pad);
+}
+
+@media (min-width: 761px) {
+  .slide { padding-right: calc(var(--pad) + 3.5rem); }
+}
+
+.slide__body {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(0.9rem, 2.4vh, 1.6rem);
+  justify-items: start;
+  align-content: center;
+  will-change: transform, opacity;
+}
+
+/* The title rides its own masked track, so it wipes rather than just fades. */
+.slide__line {
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.slide__line .work__title { will-change: transform; }
+
+.work__index {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.work__index b {
+  color: var(--accent);
+  font-weight: inherit;
+}
+
+.work__index::after {
+  content: "";
+  width: clamp(2rem, 8vw, 6rem);
+  height: 1px;
+  background: var(--line);
+}
+
+.work__title {
+  font-size: clamp(2rem, 6.2vw, 5.1rem);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.work__sub {
+  max-width: 44ch;
+  color: var(--ink-dim);
+}
+
+.work__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.work__tags li {
+  padding: 0.12rem 0.55rem;
+  border: 1px solid var(--line);
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.work__open {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 0.4rem;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: background var(--fast), color var(--fast);
+}
+
+.work__open::after {
+  content: "\2192";
+  transition: transform var(--fast);
+}
+
+.work__open:hover,
+.work__open:focus-visible {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.work__open:hover::after { transform: translateX(4px); }
+
+/* --- the cover stack -------------------------------------------------------
+   Three nested boxes per project:
+     .slide__frame  static window — border, brackets, caption. Never moves.
+     .slide__media  the mask. Slides up from +100% to cover the project below.
+     .slide__shift  counter-moves against the mask, so the artwork reads as
+                    anchored in the window while the mask wipes over it.
+   -------------------------------------------------------------------------- */
+
+.slide__frame {
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  height: min(72svh, 40rem);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+/* This is the mask, so it must clip: .slide__shift is deliberately taller
+   than the window and would otherwise spill past it. */
+.slide__media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  will-change: transform;
+}
+
+/* Exactly the size of the window. The counter-move is always smaller than
+   the mask's own travel, so the image can never be dragged far enough to
+   expose an edge and needs no extra headroom — and crucially, at rest the
+   cover is shown whole instead of cropped to its middle. */
+.slide__shift {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+  background: var(--bg-sink);
+  will-change: transform;
+}
+
+.slide__shift img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.08);
+}
+
+/* Tint lives inside .slide__shift so two overlapping covers never
+   multiply twice over the same pixels. */
+.slide__shift::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* No per-frame scanlines here: covers stack during a transition, so two
+   overlays would double-darken the same rows. The global .fx--scan already
+   crosses the whole viewport. */
+
+.slide__caption {
+  position: absolute;
+  left: 0;
+  bottom: -1.6rem;
+  font-size: 0.64rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* The whole cover is a link to the case study. */
+.slide__frame a { position: absolute; inset: 0; z-index: 6; }
+
+@media (max-width: 900px) {
+  .slide {
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 1.4rem;
+  }
+
+  .slide__frame { height: min(38svh, 20rem); order: -1; }
+  .slide__caption { display: none; }
+  .work__sub { max-width: none; }
+}
+
+/* --- reduced motion: the deck degrades into plain stacked panels ----------- */
+
+.deck--static .deck__sticky {
+  position: static;
+  height: auto;
+  overflow: visible;
+}
+
+.deck--static .deck__step { display: none; }
+
+.deck--static .slide {
+  position: relative;
+  inset: auto;
+  min-height: 100svh;
+  opacity: 1 !important;
+}
+
+.deck--static .slide__body,
+.deck--static .slide__media,
+.deck--static .slide__shift,
+.deck--static .work__title {
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.deck--static .slide__shift { inset: 0; }
+
+/* --- index rail ----------------------------------------------------------- */
+
+.rail {
+  position: fixed;
+  top: 50%;
+  right: calc(var(--pad) * 0.45);
+  z-index: 700;
+  display: grid;
+  gap: 0.55rem;
+  transform: translateY(-50%);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+}
+
+.rail__item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  color: var(--ink-faint);
+  transition: color var(--fast);
+}
+
+.rail__item::after {
+  content: "";
+  width: 0.9rem;
+  height: 1px;
+  background: currentColor;
+  transition: width var(--fast);
+}
+
+.rail__item:hover { color: var(--ink-dim); }
+
+.rail__item[aria-current="true"] {
+  color: var(--accent);
+}
+
+.rail__item[aria-current="true"]::after { width: 2rem; }
+
+@media (max-width: 760px) { .rail { display: none; } }
+
+/* --- contact -------------------------------------------------------------- */
+
+.outro {
+  align-content: center;
+  gap: clamp(1.4rem, 4vh, 2.6rem);
+  border-bottom: 0;
+}
+
+.outro__big {
+  font-size: clamp(1.8rem, 7vw, 5.5rem);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.outro__big a:hover { color: var(--accent); }
+
+.outro__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1.5rem 2rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--line);
+}
+
+.outro__grid h3 {
+  margin-bottom: 0.6rem;
+  font-size: 0.64rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.outro__grid li { color: var(--ink-dim); }
+.outro__grid a:hover { color: var(--accent); }
+
+.colophon {
+  max-width: var(--measure);
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+}

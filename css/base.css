@@ -1,0 +1,634 @@
+/* ==========================================================================
+   chan-updated-portfolio — base layer
+   tokens, reset, CRT overlays, and the chrome shared by every page
+   ========================================================================== */
+
+/* --- tokens --------------------------------------------------------------- */
+
+:root {
+  --bg: #0a0a0c;
+  --bg-raise: #101014;
+  --bg-sink: #060607;
+
+  --ink: #e8e4d8;
+  --ink-dim: #8e8a80;
+  --ink-faint: #514e49;
+  --line: #22222a;
+
+  --accent: #ffb000;
+  --accent-soft: color-mix(in srgb, var(--accent) 18%, transparent);
+  --on-accent: #0a0a0c;
+
+  --font: "Berkeley Mono", "JetBrains Mono", "IBM Plex Mono", "SFMono-Regular",
+    ui-monospace, Menlo, Consolas, monospace;
+
+  --pad: clamp(1.1rem, 4vw, 3.5rem);
+  --bar: 2.4rem;
+  --measure: 64ch;
+
+  --ease: cubic-bezier(0.22, 0.68, 0.14, 1);
+  --fast: 0.18s var(--ease);
+  --slow: 0.65s var(--ease);
+
+  --scan-opacity: 0.5;
+  --grain-opacity: 0.045;
+  color-scheme: dark;
+}
+
+/* Theme presets. Swap with the switcher in the status bar, or hard-code
+   data-theme on <html> to lock the site to one phosphor colour. */
+[data-theme="amber"] { --accent: #ffb000; }
+[data-theme="green"] { --accent: #4ef08a; }
+[data-theme="cyan"] { --accent: #4ad5ff; }
+[data-theme="rose"] { --accent: #ff5f8d; }
+[data-theme="bone"] { --accent: #e8e4d8; }
+
+/* Per-project accent overrides are set inline by js/app.js. */
+
+/* --- reset ---------------------------------------------------------------- */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+* { margin: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scrollbar-color: var(--accent) var(--bg-sink);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: clamp(0.8rem, 0.74rem + 0.3vw, 0.95rem);
+  line-height: 1.65;
+  font-variant-ligatures: none;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img,
+svg { display: block; max-width: 100%; }
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+ul { list-style: none; padding: 0; }
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* --- type utilities ------------------------------------------------------- */
+
+.label {
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.accent { color: var(--accent); }
+.dim { color: var(--ink-dim); }
+.faint { color: var(--ink-faint); }
+
+/* A caret that blinks like a tty prompt. */
+.caret::after {
+  content: "\2588";
+  margin-left: 0.15em;
+  color: var(--accent);
+  animation: blink 1.06s steps(1) infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+/* --- link styles ---------------------------------------------------------- */
+
+.link {
+  position: relative;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--fast);
+}
+
+.link:hover::after,
+.link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* --- glitch --------------------------------------------------------------- */
+
+/* Needs data-text="" matching the element's text content. */
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: var(--bg);
+}
+
+.glitch::before { color: #ff2d55; }
+.glitch::after { color: #00e5ff; }
+
+.glitch:hover::before,
+.glitch[data-glitching]::before {
+  opacity: 0.85;
+  animation: glitch-a 0.42s steps(2) infinite;
+}
+
+.glitch:hover::after,
+.glitch[data-glitching]::after {
+  opacity: 0.85;
+  animation: glitch-b 0.42s steps(2) infinite;
+}
+
+@keyframes glitch-a {
+  0% { transform: translate(-2px, 1px); clip-path: inset(10% 0 72% 0); }
+  25% { transform: translate(3px, -1px); clip-path: inset(48% 0 24% 0); }
+  50% { transform: translate(-3px, 0); clip-path: inset(80% 0 4% 0); }
+  75% { transform: translate(2px, 2px); clip-path: inset(28% 0 56% 0); }
+  100% { transform: translate(-1px, -1px); clip-path: inset(62% 0 18% 0); }
+}
+
+@keyframes glitch-b {
+  0% { transform: translate(2px, -1px); clip-path: inset(64% 0 20% 0); }
+  25% { transform: translate(-3px, 1px); clip-path: inset(16% 0 68% 0); }
+  50% { transform: translate(3px, 1px); clip-path: inset(36% 0 46% 0); }
+  75% { transform: translate(-2px, -2px); clip-path: inset(76% 0 8% 0); }
+  100% { transform: translate(1px, 2px); clip-path: inset(6% 0 82% 0); }
+}
+
+/* --- plates (tinted, dithered imagery) ------------------------------------ */
+
+.plate {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--bg-sink);
+  border: 1px solid var(--line);
+}
+
+.plate img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.08);
+}
+
+/* Multiply over white-on-black artwork tints the ink to the phosphor colour
+   while leaving the background black. */
+.plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* Corner brackets, like a viewfinder. Added by plate() on every image. */
+.bracket {
+  position: absolute;
+  z-index: 3;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--accent);
+  opacity: 0.7;
+}
+
+.bracket--tl { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.bracket--tr { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+.bracket--bl { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+.bracket--br { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+
+.plate--scan::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.38) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+/* --- global CRT overlays -------------------------------------------------- */
+
+.fx {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  pointer-events: none;
+}
+
+.fx--scan {
+  opacity: var(--scan-opacity);
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.42) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+/* A single bright line that sweeps the screen, like a slow vertical hold. */
+.fx--sweep::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 28vh;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in srgb, var(--accent) 7%, transparent),
+    transparent
+  );
+  animation: sweep 7.5s linear infinite;
+}
+
+@keyframes sweep {
+  from { transform: translateY(-30vh); }
+  to { transform: translateY(130vh); }
+}
+
+.fx--grain {
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+  animation: grain 0.9s steps(3) infinite;
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(-3%, 2%); }
+  66% { transform: translate(2%, -3%); }
+  100% { transform: translate(0, 0); }
+}
+
+.fx--vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 48%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+/* Barely-there luminance wobble. */
+.fx--flicker {
+  background: var(--accent);
+  mix-blend-mode: overlay;
+  animation: flicker 6s steps(1) infinite;
+}
+
+@keyframes flicker {
+  0%, 97% { opacity: 0; }
+  97.4% { opacity: 0.035; }
+  97.8% { opacity: 0; }
+  98.2% { opacity: 0.05; }
+  98.6%, 100% { opacity: 0; }
+}
+
+/* --- cursor --------------------------------------------------------------- */
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 950;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  opacity: 0;
+  transition: opacity 0.25s, width 0.2s var(--ease), height 0.2s var(--ease),
+    margin 0.2s var(--ease);
+}
+
+.cursor::before,
+.cursor::after {
+  content: "";
+  position: absolute;
+  background: var(--ink);
+}
+
+.cursor::before { left: 50%; top: 0; bottom: 0; width: 1px; }
+.cursor::after { top: 50%; left: 0; right: 0; height: 1px; }
+
+body[data-pointer="fine"] .cursor { opacity: 1; }
+
+.cursor[data-hot] {
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor { display: none; }
+}
+
+/* --- top bar -------------------------------------------------------------- */
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 800;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: var(--bar);
+  padding: 0 var(--pad);
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(6px);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.topbar__id {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.topbar__nav {
+  display: flex;
+  gap: 1.4rem;
+  color: var(--ink-dim);
+}
+
+.topbar__nav a:hover,
+.topbar__nav a[aria-current] { color: var(--accent); }
+
+@media (max-width: 680px) {
+  .topbar__nav a[data-optional] { display: none; }
+}
+
+/* --- status bar ----------------------------------------------------------- */
+
+.statusbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 800;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  height: var(--bar);
+  border-top: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(6px);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+}
+
+.ticker {
+  overflow: hidden;
+  white-space: nowrap;
+  padding-left: var(--pad);
+  color: var(--ink-dim);
+  mask-image: linear-gradient(to right, transparent, #000 3rem);
+}
+
+.ticker__track {
+  display: inline-block;
+  padding-left: 100%;
+  animation: ticker 38s linear infinite;
+}
+
+.ticker__track span { margin-right: 3ch; }
+
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+.statusbar:hover .ticker__track { animation-play-state: paused; }
+
+.themes {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 var(--pad) 0 1rem;
+  border-left: 1px solid var(--line);
+  height: 100%;
+}
+
+.themes__swatch {
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 1px solid var(--ink-faint);
+  background: var(--swatch);
+  transition: transform var(--fast), border-color var(--fast);
+}
+
+.themes__swatch:hover { transform: scale(1.25); }
+
+/* Auto is the only swatch that isn't one colour, so it shouldn't look like
+   one. Rotating the hue of the wheel reads as "this keeps changing", which is
+   exactly what the mode does. Under reduced motion the animation stops and it
+   stays a static rainbow, which still reads as "not a single colour". */
+.themes__swatch[data-theme="auto"] {
+  animation: swatch-cycle 8s linear infinite;
+}
+
+@keyframes swatch-cycle {
+  from { filter: hue-rotate(0deg); }
+  to { filter: hue-rotate(360deg); }
+}
+
+.themes__swatch[aria-pressed="true"] {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 2px var(--bg);
+}
+
+@media (max-width: 560px) {
+  .themes__label { display: none; }
+}
+
+/* --- page transition wipe ------------------------------------------------- */
+
+.wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 990;
+  pointer-events: none;
+  background: var(--bg);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.wipe__inner {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 0.75rem;
+  text-align: center;
+  background-image: radial-gradient(var(--accent) 1px, transparent 1px);
+  background-size: 6px 6px;
+  opacity: 0.22;
+}
+
+.wipe[data-on] {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.28s var(--ease);
+}
+
+.wipe__text {
+  position: relative;
+  z-index: 1;
+  color: var(--accent);
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+/* --- boot sequence -------------------------------------------------------- */
+
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  align-content: center;
+  padding: var(--pad);
+  background: var(--bg);
+  font-size: 0.78rem;
+  line-height: 1.9;
+  transition: opacity 0.5s var(--ease), visibility 0.5s;
+}
+
+.boot[hidden] {
+  display: grid;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.boot__log {
+  max-width: 68ch;
+  margin: 0 auto;
+  color: var(--ink-dim);
+}
+
+.boot__log b {
+  color: var(--accent);
+  font-weight: inherit;
+}
+
+.boot__skip {
+  position: absolute;
+  right: var(--pad);
+  bottom: var(--pad);
+  color: var(--ink-faint);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.boot__skip:hover { color: var(--accent); }
+
+/* --- reveal on scroll ----------------------------------------------------- */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  transition-delay: var(--delay, 0s);
+}
+
+[data-reveal][data-shown] {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- accessibility -------------------------------------------------------- */
+
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 1100;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  transform: translate(-50%, -120%);
+  transition: transform var(--fast);
+}
+
+.skip-link:focus { transform: translate(-50%, 0); }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-reveal] { opacity: 1; transform: none; }
+  .fx--sweep,
+  .fx--grain,
+  .fx--flicker { display: none; }
+}
